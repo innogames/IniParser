@@ -1,9 +1,11 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @author Till Klampaeckel <till@php.net>
  */
-class IniParserTest extends PHPUnit_Framework_TestCase
+class IniParserTest extends TestCase
 {
     /**
      * This is a test-case I wrote because I think there are small bugs
@@ -23,10 +25,10 @@ class IniParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
      */
     public function testConfigNotFound()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IniParser('/this/should/never/exist.ini');
     }
 
@@ -112,10 +114,10 @@ class IniParserTest extends PHPUnit_Framework_TestCase
     {
         $configObj = $this->getConfig('fixture04.ini');
 
-        $this->assertInternalType('array', $configObj['array1']);
+        $this->assertIsArray($configObj['array1']);
         $this->assertEquals(array('a','b','c'), $configObj['array1']);
 
-        $this->assertInternalType('array', $configObj['sect1']['array2']);
+        $this->assertIsArray($configObj['sect1']['array2']);
         $this->assertEquals(array('d','e','f'), $configObj['sect1']['array2']);
     }
 
@@ -132,11 +134,10 @@ class IniParserTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test that inheriting from an undefined section gives a nice error
-     *
-     * @expectedException UnexpectedValueException
      */
     public function testInvalidSectionReference()
     {
+        $this->expectException(UnexpectedValueException::class);
         $configObj = $this->getConfig('fixture06.ini');
     }
 
@@ -259,7 +260,7 @@ class IniParserTest extends PHPUnit_Framework_TestCase
         $parser->use_array_object = FALSE;
         $configArr = $parser->parse();
 
-        $this->assertInternalType('array', $configArr);
+        $this->assertIsArray($configArr);
     }
 
     /**
